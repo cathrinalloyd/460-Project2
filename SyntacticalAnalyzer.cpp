@@ -43,6 +43,7 @@ int SyntacticalAnalyzer::program() {
     // The first token must be an LPAREN_T
     if (token == LPAREN_T) {
         p2file << "Using rule 1\n";
+
         errors += define();
         errors += more_defines();
 
@@ -75,12 +76,12 @@ int SyntacticalAnalyzer::define() {
 
         errors += param_list();
 
-        if((token = lex->GetToken()) != RPAREN_T) errors++;
+        if(token != RPAREN_T) errors++;
+
+        token = lex->GetToken();
 
         errors += stmt();
         errors += stmt_list();
-
-        if((token = lex->GetToken()) != RPAREN_T) errors++;
     }
 
 
@@ -107,11 +108,8 @@ int SyntacticalAnalyzer::stmt() {
 
         case LPAREN_T: // Rule 9
             p2file << "Using rule 9\n";
-            
             token = lex->GetToken();
             errors += action();
-
-            if((token = lex->GetToken()) != RPAREN_T) errors++;
 
             break;
         case QUOTE_T: // Rule 11
@@ -140,8 +138,8 @@ int SyntacticalAnalyzer::more_defines() {
             errors += define();
             errors += more_defines();
             break;
-        case EOF_T: // Rule 4
-            //follow (lambda)??
+        case RPAREN_T: // Rule 4
+            token = lex->GetToken();
             break;
         default:
             // error?
@@ -160,7 +158,7 @@ int SyntacticalAnalyzer::stmt_list() {
 
     switch(token){
         case RPAREN_T: // Rule 6
-            //follow (lambda)??
+            token = lex->GetToken();
             break;
         case IDENT_T: // Rule 5
             p2file << "Using rule 5\n";
@@ -188,6 +186,8 @@ int SyntacticalAnalyzer::stmt_list() {
             break;
     }
 
+    token = lex->GetToken();
+
     p2file << "Ending <stmt_list>. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
     return errors;
 }
@@ -208,7 +208,7 @@ int SyntacticalAnalyzer::literal() {
             errors += quoted_lit();
             break;
         default:
-            // error?
+            errors++;
             // loop until firsts or follows of literal?
             break;
     }
@@ -225,6 +225,7 @@ int SyntacticalAnalyzer::quoted_lit() {
     switch(token){
         case LPAREN_T: // Rule 12
             p2file << "Using rule 12\n";
+            token = lex->GetToken();
             errors += any_other_token();
             break;
         case IDENT_T: // Rule 12
@@ -506,6 +507,7 @@ int SyntacticalAnalyzer::more_tokens() {
             break;
         default:
             // error?
+            errors++;
             // loop until firsts or follows of more_tokens?
             break;
     }
@@ -526,7 +528,6 @@ int SyntacticalAnalyzer::param_list() {
             errors += param_list();
             break;
         case RPAREN_T: // Rule 16
-            //follow (lambda)??
             break;
         default:
             errors++;
