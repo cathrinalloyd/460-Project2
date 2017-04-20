@@ -84,6 +84,8 @@ int SyntacticalAnalyzer::define() {
         errors += stmt_list();
     }
 
+    token = lex->GetToken();
+
 
     p2file << "Ending <define>. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
     return errors;
@@ -146,6 +148,8 @@ int SyntacticalAnalyzer::more_defines() {
             // loop until firsts or follows of more_defines?
             break;
     }
+
+    token = lex->GetToken();
 
     p2file << "Ending <more_defines>. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
     return errors;
