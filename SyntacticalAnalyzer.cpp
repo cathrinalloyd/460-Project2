@@ -40,20 +40,18 @@ int SyntacticalAnalyzer::program() {
     p2file << "Starting <program>. Current token = " << lex->GetTokenName(token) << ".\n";
     int errors = 0;
 
-    switch(token){
-        case LPAREN_T: // Rule 1
-            p2file << "Using rule 1\n";
-            errors += define();
-            errors += more_defines();
-            if((token = lex->GetToken()) != EOF_T){
-                errors++;
-                // error?
-            }
-            break;
-        default:
-            // error?
-            // loop until firsts or follows of program?
-            break;
+    // The first token must be an LPAREN_T
+    if (token == LPAREN_T) {
+        p2file << "Using rule 1\n";
+        errors += define();
+        //errors += more_defines();
+
+        if((token = lex->GetToken()) != EOF_T) {
+            errors++;
+        }
+
+    } else {
+        errors++;
     }
 
     p2file << "Ending <program>. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
@@ -65,38 +63,28 @@ int SyntacticalAnalyzer::define() {
     p2file << "Starting <define>. Current token = " << lex->GetTokenName(token) << ".\n";
     int errors = 0;
 
-    switch(token){
-        case LPAREN_T: // Rule 2
-            p2file << "Using rule 2\n";
-            token = lex->GetToken();
-            if((token = lex->GetToken()) != DEFINE_T){
-                errors++;
-            }
-            if((token = lex->GetToken()) != LPAREN_T){
-                errors++;
-                // error?
-            }
-            if((token = lex->GetToken()) != IDENT_T){
-                errors++;
-                // error?
-            }
-            errors += param_list();
-            if((token = lex->GetToken()) != RPAREN_T){
-                errors++;
-                // error?
-            }
-            errors += stmt();
-            errors += stmt_list();
-            if((token = lex->GetToken()) != RPAREN_T){
-                errors++;
-                // error?
-            }
-            break;
-        default:
-            // error?
-            // loop until firsts or follows of define?
-            break;
+
+    if((token = lex->GetToken()) != DEFINE_T) {
+        errors++;
+    } else {
+        p2file << "Using rule 2\n";
+
+        if((token = lex->GetToken()) != LPAREN_T) errors++;
+
+        if((token = lex->GetToken()) != IDENT_T)  errors++;
+
+        errors += param_list();
+
+        std::cout << lex->GetTokenName(token) << std::endl;
+
+        if((token = lex->GetToken()) != RPAREN_T) errors++;
+
+        errors += stmt();
+        errors += stmt_list();
+
+        if((token = lex->GetToken()) != RPAREN_T) errors++;
     }
+
 
     p2file << "Ending <define>. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
     return errors;
@@ -107,28 +95,32 @@ int SyntacticalAnalyzer::stmt() {
     p2file << "Starting <stmt>. Current token = " << lex->GetTokenName(token) << ".\n";
     int errors = 0;
 
-    switch(token){
-        case IDENT_T: // Rule 8
-            p2file << "Using rule 8\n";
-            token = lex->GetToken();
-            break;
-        case LPAREN_T: // Rule 9
-            p2file << "Using rule 9\n";
-            token = lex->GetToken();
-            errors += action();
-            if((token = lex->GetToken()) != RPAREN_T){
-                errors++;
-                // error?
-            }
-            break;
+    switch(token) {
+
         case NUMLIT_T: // Rule 7
             p2file << "Using rule 7\n";
             errors += literal();
             break;
-        case QUOTE_T: // Rule 7
-            p2file << "Using rule 7\n";
-            errors += literal();
+
+        case IDENT_T: // Rule 8
+            p2file << "Using rule 8\n";
+            token = lex->GetToken();
             break;
+
+        case LPAREN_T: // Rule 9
+            p2file << "Using rule 9\n";
+            
+            token = lex->GetToken();
+            errors += action();
+
+            if((token = lex->GetToken()) != RPAREN_T) errors++;
+
+            break;
+        // case QUOTE_T: // Rule 11
+        //     p2file << "Using rule 11\n";
+        //     errors += quoted_lit();
+        //     break;
+        
         default:
             // error?
             // loop until firsts or follows of stmt?
@@ -144,7 +136,7 @@ int SyntacticalAnalyzer::more_defines() {
     p2file << "Starting <more_defines>. Current token = " << lex->GetTokenName(token) << ".\n";
     int errors = 0;
 
-    switch(token){
+    switch(token) {
         case LPAREN_T: // Rule 3
             p2file << "Using rule 3\n";
             errors += define();
@@ -350,8 +342,8 @@ int SyntacticalAnalyzer::quoted_lit() {
             errors += any_other_token();
             break;
         default:
-            // error?
             // loop until firsts or follows of quoted_lit?
+            errors++;
             break;
     }
 
@@ -855,7 +847,7 @@ int SyntacticalAnalyzer::any_other_token() {
             token = lex->GetToken();
             break;
         default:
-            // error?
+            errors++;
             // loop until firsts or follows of any_other_token?
             break;
     }
