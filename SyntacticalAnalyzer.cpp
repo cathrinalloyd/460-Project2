@@ -116,8 +116,7 @@ int SyntacticalAnalyzer::stmt() {
             break;
         case QUOTE_T: // Rule 11
             p2file << "Using rule 11\n";
-            token = lex->GetToken();
-            errors += quoted_lit();
+            errors += literal();
             break;
         
         default:
