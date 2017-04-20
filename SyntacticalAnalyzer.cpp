@@ -44,7 +44,7 @@ int SyntacticalAnalyzer::program() {
     if (token == LPAREN_T) {
         p2file << "Using rule 1\n";
         errors += define();
-        //errors += more_defines();
+        errors += more_defines();
 
         if((token = lex->GetToken()) != EOF_T) {
             errors++;
@@ -74,8 +74,6 @@ int SyntacticalAnalyzer::define() {
         if((token = lex->GetToken()) != IDENT_T)  errors++;
 
         errors += param_list();
-
-        std::cout << lex->GetTokenName(token) << std::endl;
 
         if((token = lex->GetToken()) != RPAREN_T) errors++;
 
@@ -116,10 +114,11 @@ int SyntacticalAnalyzer::stmt() {
             if((token = lex->GetToken()) != RPAREN_T) errors++;
 
             break;
-        // case QUOTE_T: // Rule 11
-        //     p2file << "Using rule 11\n";
-        //     errors += quoted_lit();
-        //     break;
+        case QUOTE_T: // Rule 11
+            p2file << "Using rule 11\n";
+            token = lex->GetToken();
+            errors += quoted_lit();
+            break;
         
         default:
             // error?
@@ -530,8 +529,7 @@ int SyntacticalAnalyzer::param_list() {
             //follow (lambda)??
             break;
         default:
-            // error?
-            // loop until firsts or follows of param_list?
+            errors++;
             break;
     }
 
@@ -731,7 +729,6 @@ int SyntacticalAnalyzer::any_other_token() {
             errors += more_tokens();
             if((token = lex->GetToken()) != RPAREN_T){
                 errors++;
-                // error?
             }
             break;
         case IDENT_T: // Rule 45
