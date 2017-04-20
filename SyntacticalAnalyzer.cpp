@@ -358,6 +358,7 @@ int SyntacticalAnalyzer::more_tokens() {
     switch(token){
         case RPAREN_T: // Rule 14
             //follow (lambda)??
+            token = lex->GetToken();
             break;
         case LPAREN_T: // Rule 13
             p2file << "Using rule 13\n";
@@ -727,7 +728,8 @@ int SyntacticalAnalyzer::any_other_token() {
             p2file << "Using rule 44\n";
             token = lex->GetToken();
             errors += more_tokens();
-            if((token = lex->GetToken()) != RPAREN_T){
+
+            if(token != RPAREN_T){
                 errors++;
             }
             break;
