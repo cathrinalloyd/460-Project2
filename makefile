@@ -1,24 +1,3 @@
-input = test1
-runFile = P2.out
-icon = '==>'
-
-run : $(runFile)
-	clear
-	clear
-	@echo $(icon) Running $(runFile) with input $(input).ss:
-	@echo
-	@./P2.out $(input).ss
-	@echo
-	@echo $(icon) $(input).dbg:
-	@cat $(input).dbg
-	@echo
-	@echo $(icon) $(input).p1:
-	@cat $(input).p1
-	@echo
-	@echo $(icon) $(input).p2:
-	@cat $(input).p2
-	@echo
-
 P2.out : Project2.o SetLimits.o LexicalAnalyzer.o SyntacticalAnalyzer.o
 	g++ -g -o P2.out Project2.o SetLimits.o LexicalAnalyzer.o SyntacticalAnalyzer.o
 
@@ -38,14 +17,14 @@ clean :
 	rm *.o P2.out *.gch
 
 submit : Project2.cpp LexicalAnalyzer.h LexicalAnalyzer.save SyntacticalAnalyzer.h SyntacticalAnalyzer.cpp makefile README.txt
-	rm -rf ylnP2
-	mkdir ylnP2
-	cp Project2.cpp ylnP2
-	cp LexicalAnalyzer.h ylnP2
-	cp LexicalAnalyzer.save ylnP2
-	cp SyntacticalAnalyzer.h ylnP2
-	cp SyntacticalAnalyzer.cpp ylnP2
-	cp makefile ylnP2
-	cp README.txt ylnP2
-	tar cfvz ylnP2.tgz ylnP2
-	#cp ylnP2.tgz ~tiayln/cs460drop
+	rm -rf TeamPP2
+	mkdir TeamPP2
+	cp Project2.cpp TeamPP2
+	cp LexicalAnalyzer.h TeamPP2
+	cp LexicalAnalyzer.save TeamPP2
+	cp SyntacticalAnalyzer.h TeamPP2
+	cp SyntacticalAnalyzer.cpp TeamPP2
+	cp makefile TeamPP2
+	cp README.txt TeamPP2
+	tar cfvz TeamPP2.tgz TeamPP2
+	cp TeamPP2.tgz ~tiawatts/cs460drop
