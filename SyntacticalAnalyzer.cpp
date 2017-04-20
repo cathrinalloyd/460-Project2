@@ -1,8 +1,8 @@
 /********************************************************************************/
-/* Project: 									*/
-/* Author: 									*/
-/* Date: 									*/
-/* Description:									*/
+/* Project: CS 460 Project 2				                                    */
+/* Author:  Catie Lloyd Mitchell Salas                                   		*/
+/* Date: 	April 19, 2017								                        */
+/* Description:	Syntactical Analyzer for the Guile programming language         */
 /********************************************************************************/
 
 #include <iostream>
@@ -15,9 +15,6 @@ using namespace std;
 
 SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 {
-/********************************************************************************/
-/* This function will								*/
-/********************************************************************************/
 	lex = new LexicalAnalyzer (filename);
 	int fnlength = strlen (filename);
 	filename[fnlength-2] = 'p';
@@ -29,9 +26,6 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 
 SyntacticalAnalyzer::~SyntacticalAnalyzer ()
 {
-/********************************************************************************/
-/* This function will								*/
-/********************************************************************************/
 	delete lex;
 }
 
